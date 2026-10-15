@@ -1,0 +1,43 @@
+---
+import { negocio, beneficios } from '../../data/config';
+---
+
+<section id="nosotras" class="scroll-mt-20 py-16">
+  <div class="contenedor grid items-center gap-10 lg:grid-cols-2">
+    <div class="order-2 overflow-hidden rounded-3xl shadow-suave ring-4 ring-white lg:order-1">
+      <img
+        src="/img/marca/aromapoms-trio.jpeg"
+        alt="Tres AromaPoms con mensajes positivos de La Pomponería BGA"
+        class="w-full object-cover"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="order-1 lg:order-2">
+      <span class="chip">💜 Nuestra historia</span>
+      <h2 class="titulo-seccion mt-3">Pequeños detalles, grandes momentos</h2>
+      <p class="mt-4 text-marca-morado/80">
+        {negocio.descripcionLarga}
+      </p>
+      <p class="mt-3 text-marca-morado/70">
+        Aromas que inspiran, mensajes que conectan. Cada AromaPom lleva color, cariño y un
+        mensaje positivo para alegrar tus espacios o sorprender a quien quieres.
+      </p>
+
+      <!-- Beneficios de fidelidad -->
+      <div class="mt-7 space-y-3">
+        {beneficios.map((b) => (
+          <div class="flex items-start gap-3 rounded-2xl bg-marca-rosaClaro p-4">
+            <span class="text-2xl" aria-hidden="true">
+              {b.icono === 'descuento' ? '🏷️' : b.icono === 'regalo' ? '🎁' : '💝'}
+            </span>
+            <div>
+              <p class="font-bold text-marca-morado">{b.titulo}</p>
+              <p class="text-sm text-marca-morado/70">{b.detalle}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fuentes (Nunito + Baloo 2) importadas en el <head> del layout */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-marca-crema text-marca-morado font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .contenedor {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold
+           transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-4
+           focus-visible:ring-marca-fucsia/40 active:scale-95;
+  }
+  .btn-primario {
+    @apply btn bg-marca-fucsia text-white shadow-tarjeta hover:bg-marca-lila hover:-translate-y-0.5;
+  }
+  .btn-whatsapp {
+    @apply btn bg-[#25D366] text-white shadow-tarjeta hover:bg-[#1EBE5A] hover:-translate-y-0.5;
+  }
+  .btn-contorno {
+    @apply btn border-2 border-marca-fucsia text-marca-fucsia hover:bg-marca-fucsia hover:text-white;
+  }
+
+  .titulo-seccion {
+    @apply text-3xl sm:text-4xl font-extrabold text-marca-morado;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-white/70 px-3 py-1 text-sm font-semibold
+           text-marca-lila shadow-sm;
+  }
+}
+
+/* Degradado decorativo reutilizable */
+.bg-degradado-marca {
+  background: linear-gradient(135deg, #FDEBF4 0%, #F3E8FF 50%, #FFF7FB 100%);
+}
+
+/* Oculta la barra de scroll pero mantiene el scroll (carrusel de categorías) */
+.sin-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.sin-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Opción de bolsa seleccionada en el modal (paso 2) */
+.opcion-bolsa.bolsa-activa {
+  border-color: #e6168b; /* marca-fucsia */
+  box-shadow: 0 0 0 3px rgba(230, 22, 139, 0.4);
+}

@@ -1,0 +1,50 @@
+---
+import Logo from './Logo.astro';
+import { negocio } from '../data/config';
+
+const anio = new Date().getFullYear();
+const waPedido = `https://wa.me/${negocio.whatsapp.numero}?text=${encodeURIComponent('¡Hola La Pomponería BGA! 💜 Quiero más información sobre los AromaPoms.')}`;
+---
+
+<footer class="mt-20 border-t border-marca-rosa/40 bg-marca-rosaClaro">
+  <div class="contenedor grid gap-10 py-12 md:grid-cols-3">
+    <div>
+      <Logo />
+      <p class="mt-4 max-w-xs text-sm text-marca-morado/70">
+        {negocio.descripcionCorta}
+      </p>
+      <p class="mt-3 text-sm font-semibold text-marca-lila">📍 {negocio.ciudad}</p>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-extrabold text-marca-morado">Explora</h3>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a href="/#aromas" class="text-marca-morado/80 transition hover:text-marca-fucsia">Nuestros 15 aromas</a></li>
+        <li><a href="/#como-funciona" class="text-marca-morado/80 transition hover:text-marca-fucsia">Cómo funciona</a></li>
+        <li><a href="/#nosotras" class="text-marca-morado/80 transition hover:text-marca-fucsia">Nosotras</a></li>
+        <li><a href="/#contacto" class="text-marca-morado/80 transition hover:text-marca-fucsia">Contacto y pagos</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-extrabold text-marca-morado">Síguenos</h3>
+      <div class="mt-4 flex flex-col gap-3 text-sm">
+        <a href={waPedido} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-marca-morado/80 transition hover:text-marca-fucsia">
+          <span aria-hidden="true">💬</span> WhatsApp: {negocio.whatsapp.numeroVisible}
+        </a>
+        <a href={negocio.redes.instagram.url} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-marca-morado/80 transition hover:text-marca-fucsia">
+          <span aria-hidden="true">📸</span> Instagram: {negocio.redes.instagram.usuario}
+        </a>
+        <a href={negocio.redes.tiktok.url} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-marca-morado/80 transition hover:text-marca-fucsia">
+          <span aria-hidden="true">🎵</span> TikTok: {negocio.redes.tiktok.usuario}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-marca-rosa/40 py-5">
+    <p class="contenedor text-center text-xs text-marca-morado/60">
+      © {anio} {negocio.nombre} · {negocio.marcaProducto}. Hecho con 💜 en Bucaramanga.
+    </p>
+  </div>
+</footer>

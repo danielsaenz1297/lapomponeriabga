@@ -1,0 +1,74 @@
+---
+import { categorias, aromasPorCategoria } from '../../data/aromas';
+import type { Categoria } from '../../data/aromas';
+import TarjetaAroma from '../TarjetaAroma.astro';
+
+const orden: Categoria[] = ['suaves', 'fuertes', 'citricos'];
+---
+
+<section id="aromas" class="scroll-mt-20 py-16">
+  <div class="contenedor">
+    <div class="mx-auto max-w-2xl text-center">
+      <span class="chip">🌈 15 aromas para elegir</span>
+      <h2 class="titulo-seccion mt-3">Elige tu favorito</h2>
+      <p class="mt-3 text-marca-morado/70">
+        15 aromas, muchísimas formas de sorprender. Agrégalos a tu pedido y finaliza por WhatsApp.
+      </p>
+    </div>
+
+    <!-- Filtros por categoría -->
+    <div class="mt-8 flex flex-wrap justify-center gap-2">
+      <button type="button" class="filtro-aroma btn-primario px-4 py-2 text-sm" data-filtro="todos" aria-pressed="true">
+        Todos
+      </button>
+      {orden.map((cat) => (
+        <button type="button" class="filtro-aroma btn-contorno px-4 py-2 text-sm" data-filtro={cat} aria-pressed="false">
+          {categorias[cat].emoji} {categorias[cat].titulo}
+        </button>
+      ))}
+    </div>
+
+    <!-- Grupos por categoría -->
+    {orden.map((cat) => (
+      <div class="grupo-categoria mt-12" data-categoria={cat}>
+        <div class="mb-5 flex items-end justify-between gap-3 border-b-2 border-marca-rosa/40 pb-2">
+          <h3 class="font-display text-2xl font-extrabold text-marca-morado">
+            {categorias[cat].emoji} {categorias[cat].titulo}
+          </h3>
+          <p class="text-sm font-semibold text-marca-lila">{categorias[cat].subtitulo}</p>
+        </div>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {aromasPorCategoria(cat).map((aroma) => (
+            <TarjetaAroma aroma={aroma} />
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  const botones = document.querySelectorAll('.filtro-aroma');
+  const grupos = document.querySelectorAll('.grupo-categoria');
+
+  botones.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filtro = btn.getAttribute('data-filtro');
+
+      // Estado visual de los botones
+      botones.forEach((b) => {
+        const activo = b === btn;
+        b.setAttribute('aria-pressed', String(activo));
+        b.classList.toggle('btn-primario', activo);
+        b.classList.toggle('btn-contorno', !activo);
+      });
+
+      // Mostrar / ocultar grupos
+      grupos.forEach((g) => {
+        const cat = g.getAttribute('data-categoria');
+        const mostrar = filtro === 'todos' || filtro === cat;
+        (g as HTMLElement).style.display = mostrar ? '' : 'none';
+      });
+    });
+  });
+</script>

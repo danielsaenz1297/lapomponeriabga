@@ -1,0 +1,90 @@
+---
+import { bolsas } from '../../data/bolsas';
+---
+
+<section id="bolsas" class="scroll-mt-20 bg-degradado-marca py-16">
+  <div class="contenedor">
+    <div class="mx-auto max-w-2xl text-center">
+      <span class="chip bg-white">🎁 Incluida sin costo</span>
+      <h2 class="titulo-seccion mt-3">8 ediciones especiales</h2>
+      <p class="mt-3 text-marca-morado/70">
+        Cada AromaPom viene en su bolsa de regalo. Al agregar un aroma a tu pedido,
+        eliges la edición que más te guste: un detalle diferente para cada ocasión.
+      </p>
+      <p class="mt-2 text-sm font-semibold text-marca-lila">
+        👆 Pasa el cursor o toca cada bolsa para ver su reverso.
+      </p>
+    </div>
+
+    <div class="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+      {bolsas.map((b) => (
+        <figure class="overflow-hidden rounded-3xl bg-white shadow-tarjeta ring-1 ring-marca-rosa/30 transition-transform duration-300 hover:-translate-y-1">
+          <button
+            type="button"
+            class="bolsa-flip group relative block aspect-square w-full overflow-hidden bg-marca-rosaClaro"
+            data-tiene-lado2={b.lado2 ? 'true' : 'false'}
+            aria-label={`Ver reverso de la bolsa ${b.nombre}`}
+          >
+            <!-- Lado 1 (frente) -->
+            <img
+              src={b.lado1}
+              alt={`Bolsa ${b.nombre}, frente`}
+              class="cara-1 h-full w-full object-cover transition-opacity duration-300"
+              loading="lazy"
+            />
+            {b.lado2 && (
+              <>
+                <!-- Lado 2 (reverso) -->
+                <img
+                  src={b.lado2}
+                  alt={`Bolsa ${b.nombre}, reverso`}
+                  class="cara-2 absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                />
+                <span class="etiqueta-lado absolute bottom-2 right-2 rounded-full bg-marca-morado/80 px-2 py-0.5 text-[10px] font-bold text-white">
+                  Lado 1
+                </span>
+              </>
+            )}
+          </button>
+          <figcaption class="p-4">
+            <h3 class="font-display text-base font-extrabold text-marca-morado">{b.nombre}</h3>
+            <p class="mt-1 text-xs text-marca-morado/70">{b.frase}</p>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="#aromas" class="btn-primario">Elegir mi aroma 🌈</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Alterna entre lado 1 y lado 2 al pasar el cursor (escritorio) o tocar (móvil).
+  document.querySelectorAll('.bolsa-flip').forEach((btn) => {
+    if (btn.getAttribute('data-tiene-lado2') !== 'true') return;
+
+    const cara1 = btn.querySelector('.cara-1') as HTMLElement | null;
+    const cara2 = btn.querySelector('.cara-2') as HTMLElement | null;
+    const etiqueta = btn.querySelector('.etiqueta-lado') as HTMLElement | null;
+
+    const mostrarLado2 = (ver2: boolean) => {
+      if (cara1) cara1.style.opacity = ver2 ? '0' : '1';
+      if (cara2) cara2.style.opacity = ver2 ? '1' : '0';
+      if (etiqueta) etiqueta.textContent = ver2 ? 'Lado 2' : 'Lado 1';
+    };
+
+    // Escritorio: hover
+    btn.addEventListener('mouseenter', () => mostrarLado2(true));
+    btn.addEventListener('mouseleave', () => mostrarLado2(false));
+
+    // Móvil / clic: alternar
+    let ver2 = false;
+    btn.addEventListener('click', () => {
+      ver2 = !ver2;
+      mostrarLado2(ver2);
+    });
+  });
+</script>

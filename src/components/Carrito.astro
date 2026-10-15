@@ -1,0 +1,381 @@
+---
+import { negocio, precios } from '../data/config';
+import { bolsas, bolsaPorDefecto } from '../data/bolsas';
+---
+
+<!-- Overlay -->
+<div
+  id="carrito-overlay"
+  class="fixed inset-0 z-[60] hidden bg-marca-morado/40 backdrop-blur-sm"
+  aria-hidden="true"
+></div>
+
+<!-- Panel lateral del carrito -->
+<aside
+  id="carrito-panel"
+  class="fixed right-0 top-0 z-[70] flex h-full w-full max-w-md translate-x-full flex-col bg-white shadow-2xl transition-transform duration-300 ease-out"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="carrito-titulo"
+>
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between border-b border-marca-rosa/40 bg-marca-rosaClaro px-5 py-4">
+    <h2 id="carrito-titulo" class="font-display text-xl font-extrabold text-marca-morado">
+      Tu pedido 🛍️
+    </h2>
+    <button
+      type="button"
+      id="btn-cerrar-carrito"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-marca-morado transition hover:bg-marca-rosa/40"
+      aria-label="Cerrar carrito"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Lista de productos -->
+  <div id="carrito-items" class="flex-1 overflow-y-auto px-5 py-4">
+    <!-- Estado vacío -->
+    <div id="carrito-vacio" class="flex h-full flex-col items-center justify-center text-center">
+      <div class="text-5xl">🌸</div>
+      <p class="mt-4 font-bold text-marca-morado">Tu carrito está vacío</p>
+      <p class="mt-1 text-sm text-marca-morado/60">
+        Agrega tus aromas favoritos y elige la bolsa de regalo.
+      </p>
+    </div>
+  </div>
+
+  <!-- Pie: datos del cliente + total + enviar -->
+  <div id="carrito-pie" class="hidden border-t border-marca-rosa/40 bg-marca-crema px-5 py-4">
+    <!-- Datos del cliente (opcionales, mejoran el mensaje) -->
+    <div class="mb-3 space-y-2">
+      <input
+        type="text"
+        id="cliente-nombre"
+        placeholder="Tu nombre"
+        class="w-full rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm text-marca-morado placeholder:text-marca-morado/40 focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30"
+      />
+      <input
+        type="text"
+        id="cliente-zona"
+        placeholder="Zona o barrio de entrega (Bucaramanga y área metro)"
+        class="w-full rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm text-marca-morado placeholder:text-marca-morado/40 focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30"
+      />
+    </div>
+
+    <div class="mb-3 flex items-center justify-between">
+      <span class="text-sm font-semibold text-marca-morado/70">Total</span>
+      <span id="carrito-total" class="font-display text-2xl font-extrabold text-marca-fucsia">$0</span>
+    </div>
+
+    <button type="button" id="btn-enviar-whatsapp" class="btn-whatsapp w-full">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+        <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.511 5.26l-.999 3.648 3.477-.983z"/>
+      </svg>
+      Finalizar pedido por WhatsApp
+    </button>
+    <p class="mt-2 text-center text-[11px] text-marca-morado/50">
+      Cada AromaPom incluye su bolsa de regalo. El pago (Nequi, Daviplata, transferencia o efectivo) y el envío se coordinan por WhatsApp.
+    </p>
+  </div>
+</aside>
+
+<script define:vars={{ waNumero: negocio.whatsapp.numero, precioUnidad: precios.unidad, bolsaDefault: bolsaPorDefecto }}>
+  // ====== Estado del carrito (persistido en localStorage) ======
+  // Cada item es la combinación aroma + bolsa. La clave es `${aromaId}__${bolsaId}`.
+  const CLAVE = 'pomponeria-carrito-v2';
+  const cargar = () => {
+    try { return JSON.parse(localStorage.getItem(CLAVE) || '[]'); } catch { return []; }
+  };
+  const guardar = (items) => localStorage.setItem(CLAVE, JSON.stringify(items));
+
+  let carrito = cargar();
+
+  const fmt = (n) => '$' + Number(n).toLocaleString('es-CO');
+  const claveItem = (aromaId, bolsaId) => `${aromaId}__${bolsaId}`;
+  const totalUnidades = () => carrito.reduce((a, it) => a + it.cantidad, 0);
+  const calcularTotal = () => totalUnidades() * precioUnidad;
+
+  // ====== Elementos del DOM ======
+  const overlay = document.getElementById('carrito-overlay');
+  const panel = document.getElementById('carrito-panel');
+  const cont = document.getElementById('carrito-items');
+  const vacio = document.getElementById('carrito-vacio');
+  const pie = document.getElementById('carrito-pie');
+  const totalEl = document.getElementById('carrito-total');
+  const contador = document.getElementById('contador-carrito');
+
+  // ====== Abrir / cerrar carrito ======
+  const abrir = () => {
+    overlay?.classList.remove('hidden');
+    panel?.classList.remove('translate-x-full');
+    document.body.style.overflow = 'hidden';
+  };
+  const cerrar = () => {
+    panel?.classList.add('translate-x-full');
+    overlay?.classList.add('hidden');
+    document.body.style.overflow = '';
+  };
+
+  document.getElementById('btn-abrir-carrito')?.addEventListener('click', abrir);
+  document.getElementById('btn-cerrar-carrito')?.addEventListener('click', cerrar);
+  overlay?.addEventListener('click', cerrar);
+
+  // ====== Modal de selección de bolsa (paso 2) ======
+  // Se obtienen de forma perezosa (lazy): el <ModalBolsa> está DESPUÉS de este
+  // componente en el HTML, por lo que capturarlos al inicio daría null.
+  const getBolsaOverlay = () => document.getElementById('bolsa-overlay');
+  const getBolsaSubtitulo = () => document.getElementById('bolsa-subtitulo');
+  const opcionesBolsa = () => Array.from(document.querySelectorAll('.opcion-bolsa'));
+
+  // Contexto temporal mientras el modal está abierto
+  let aromaPendiente = null;        // producto a agregar
+  let bolsaSeleccionada = bolsaDefault.id;
+  let modoEdicion = null;           // clave del item que se está editando (cambio de bolsa)
+
+  const marcarBolsa = (bolsaId) => {
+    bolsaSeleccionada = bolsaId;
+    opcionesBolsa().forEach((op) => {
+      const activo = op.dataset.bolsaId === bolsaId;
+      op.setAttribute('aria-pressed', String(activo));
+      // Estado visual mediante una clase propia (sin "/" para no romper classList)
+      op.classList.toggle('bolsa-activa', activo);
+      // Check
+      const check = op.querySelector('.indicador-check');
+      if (check) {
+        check.classList.toggle('hidden', !activo);
+        check.classList.toggle('flex', activo);
+      }
+    });
+  };
+
+  const abrirModalBolsa = ({ aroma = null, edicion = null, bolsaActual = bolsaDefault.id, titulo = '' } = {}) => {
+    aromaPendiente = aroma;
+    modoEdicion = edicion;
+    marcarBolsa(bolsaActual);
+    const subt = getBolsaSubtitulo();
+    if (subt && titulo) subt.textContent = titulo;
+    const ov = getBolsaOverlay();
+    ov?.classList.remove('hidden');
+    ov?.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
+  const cerrarModalBolsa = () => {
+    const ov = getBolsaOverlay();
+    ov?.classList.add('hidden');
+    ov?.classList.remove('flex');
+    aromaPendiente = null;
+    modoEdicion = null;
+    // Si el carrito está abierto, mantener bloqueo de scroll
+    if (panel?.classList.contains('translate-x-full')) document.body.style.overflow = '';
+  };
+
+  // Todos los elementos del modal viven en <ModalBolsa>, que en el HTML va DESPUÉS
+  // de este componente. Por eso NO existen cuando corre este script. Usamos
+  // delegación de eventos en `document` para que funcionen igual.
+  document.addEventListener('click', (e) => {
+    // Cerrar con el botón X
+    if (e.target.closest('#btn-cerrar-bolsa')) { cerrarModalBolsa(); return; }
+    // Clic en el fondo del overlay (fuera del modal) cierra
+    const ov = getBolsaOverlay();
+    if (ov && e.target === ov) { cerrarModalBolsa(); return; }
+    // Seleccionar una opción de bolsa
+    const op = e.target.closest('.opcion-bolsa');
+    if (op) { marcarBolsa(op.dataset.bolsaId); return; }
+    // Confirmar
+    if (e.target.closest('#btn-confirmar-bolsa')) { confirmarBolsa(); return; }
+  });
+
+  const datosBolsa = (bolsaId) => {
+    const op = opcionesBolsa().find((o) => o.dataset.bolsaId === bolsaId);
+    return op
+      ? { id: op.dataset.bolsaId, nombre: op.dataset.bolsaNombre, imagen: op.dataset.bolsaImagen }
+      : { id: bolsaDefault.id, nombre: bolsaDefault.nombre, imagen: bolsaDefault.lado1 };
+  };
+
+  // Confirmar bolsa -> agregar o actualizar item
+  function confirmarBolsa() {
+    const bolsa = datosBolsa(bolsaSeleccionada);
+
+    if (modoEdicion) {
+      // Cambiar la bolsa de un item existente
+      const item = carrito.find((it) => it.clave === modoEdicion);
+      if (item) {
+        const nuevaClave = claveItem(item.aromaId, bolsa.id);
+        const yaExiste = carrito.find((it) => it.clave === nuevaClave && it.clave !== modoEdicion);
+        if (yaExiste) {
+          // Fusionar cantidades si ya hay ese aroma+bolsa
+          yaExiste.cantidad += item.cantidad;
+          carrito = carrito.filter((it) => it.clave !== modoEdicion);
+        } else {
+          item.clave = nuevaClave;
+          item.bolsaId = bolsa.id;
+          item.bolsaNombre = bolsa.nombre;
+          item.bolsaImagen = bolsa.imagen;
+        }
+        guardar(carrito);
+        render();
+      }
+      cerrarModalBolsa();
+      return;
+    }
+
+    // Agregar nuevo item (aroma + bolsa)
+    if (aromaPendiente) {
+      const clave = claveItem(aromaPendiente.id, bolsa.id);
+      const existente = carrito.find((it) => it.clave === clave);
+      if (existente) {
+        existente.cantidad += 1;
+      } else {
+        carrito.push({
+          clave,
+          aromaId: aromaPendiente.id,
+          nombre: aromaPendiente.nombre,
+          emoji: aromaPendiente.emoji,
+          imagen: aromaPendiente.imagen,
+          bolsaId: bolsa.id,
+          bolsaNombre: bolsa.nombre,
+          bolsaImagen: bolsa.imagen,
+          cantidad: 1,
+        });
+      }
+      guardar(carrito);
+      render();
+    }
+    cerrarModalBolsa();
+    abrir();
+  }
+
+  // ====== Cerrar con ESC (modal tiene prioridad) ======
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const ov = getBolsaOverlay();
+    if (ov && !ov.classList.contains('hidden')) cerrarModalBolsa();
+    else cerrar();
+  });
+
+  // ====== Renderizado del carrito ======
+  const render = () => {
+    const unidades = totalUnidades();
+
+    // Contador en el header
+    if (contador) {
+      if (unidades > 0) {
+        contador.textContent = String(unidades);
+        contador.classList.remove('hidden');
+        contador.classList.add('inline-flex');
+      } else {
+        contador.classList.add('hidden');
+        contador.classList.remove('inline-flex');
+      }
+    }
+
+    // Vacío vs con items
+    if (carrito.length === 0) {
+      vacio?.classList.remove('hidden');
+      pie?.classList.add('hidden');
+      cont?.querySelectorAll('[data-item]').forEach((n) => n.remove());
+      return;
+    }
+    vacio?.classList.add('hidden');
+    pie?.classList.remove('hidden');
+
+    // Reconstruir lista
+    cont?.querySelectorAll('[data-item]').forEach((n) => n.remove());
+    carrito.forEach((it) => {
+      const card = document.createElement('div');
+      card.dataset.item = it.clave;
+      card.className = 'mb-3 rounded-2xl border border-marca-rosa/40 bg-white p-3 shadow-sm';
+      card.innerHTML = `
+        <div class="flex gap-3">
+          <img src="${it.imagen}" alt="${it.nombre}" class="h-16 w-16 shrink-0 rounded-xl object-cover" loading="lazy" />
+          <div class="flex flex-1 flex-col">
+            <div class="flex items-start justify-between gap-2">
+              <p class="font-bold text-marca-morado">${it.emoji} ${it.nombre}</p>
+              <button type="button" data-quitar="${it.clave}" class="text-marca-morado/40 transition hover:text-marca-fucsia" aria-label="Quitar ${it.nombre}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <button type="button" data-editar-bolsa="${it.clave}" class="mt-1 inline-flex items-center gap-1.5 self-start rounded-full bg-marca-rosaClaro px-2.5 py-1 text-xs font-semibold text-marca-lila transition hover:bg-marca-rosa/40">
+              🎁 Bolsa: ${it.bolsaNombre} <span class="underline">cambiar</span>
+            </button>
+            <div class="mt-2 flex items-center gap-2">
+              <button type="button" data-menos="${it.clave}" class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-marca-rosaClaro font-bold text-marca-fucsia" aria-label="Quitar una unidad">−</button>
+              <span class="w-8 text-center font-bold text-marca-morado">${it.cantidad}</span>
+              <button type="button" data-mas="${it.clave}" class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-marca-rosaClaro font-bold text-marca-fucsia" aria-label="Agregar una unidad">+</button>
+              <span class="ml-auto text-sm font-bold text-marca-morado/70">${fmt(it.cantidad * precioUnidad)}</span>
+            </div>
+          </div>
+        </div>`;
+      cont?.appendChild(card);
+    });
+
+    if (totalEl) totalEl.textContent = fmt(calcularTotal());
+  };
+
+  // ====== Acciones sobre items ======
+  const cambiar = (clave, delta) => {
+    const it = carrito.find((x) => x.clave === clave);
+    if (!it) return;
+    it.cantidad += delta;
+    if (it.cantidad <= 0) carrito = carrito.filter((x) => x.clave !== clave);
+    guardar(carrito);
+    render();
+  };
+  const quitar = (clave) => {
+    carrito = carrito.filter((x) => x.clave !== clave);
+    guardar(carrito);
+    render();
+  };
+
+  // Delegación de eventos dentro del carrito
+  cont?.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-mas],[data-menos],[data-quitar],[data-editar-bolsa]');
+    if (!t) return;
+    if (t.dataset.mas) cambiar(t.dataset.mas, +1);
+    else if (t.dataset.menos) cambiar(t.dataset.menos, -1);
+    else if (t.dataset.quitar) quitar(t.dataset.quitar);
+    else if (t.dataset.editarBolsa) {
+      const item = carrito.find((x) => x.clave === t.dataset.editarBolsa);
+      if (item) {
+        cerrar();
+        abrirModalBolsa({ edicion: item.clave, bolsaActual: item.bolsaId, titulo: `Cambia la bolsa de tu ${item.nombre}` });
+      }
+    }
+  });
+
+  // ====== Botones "Agregar" en las tarjetas de aroma -> abre modal de bolsa ======
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-agregar]');
+    if (!btn) return;
+    try {
+      const aroma = JSON.parse(btn.dataset.agregar);
+      abrirModalBolsa({ aroma, bolsaActual: bolsaDefault.id, titulo: `Elige la bolsa para tu ${aroma.nombre} · incluida sin costo` });
+    } catch (err) { console.error('Producto inválido', err); }
+  });
+
+  // ====== Finalizar pedido por WhatsApp ======
+  document.getElementById('btn-enviar-whatsapp')?.addEventListener('click', () => {
+    if (carrito.length === 0) return;
+    const nombre = (document.getElementById('cliente-nombre')?.value || '').trim();
+    const zona = (document.getElementById('cliente-zona')?.value || '').trim();
+
+    let msg = '¡Hola La Pomponería BGA! 💜\nQuiero hacer este pedido de AromaPoms:\n\n';
+    carrito.forEach((it) => {
+      msg += `• ${it.cantidad} x ${it.nombre} — Bolsa: ${it.bolsaNombre}\n`;
+    });
+    msg += `\nTotal de unidades: ${totalUnidades()}`;
+    msg += `\nTotal: ${fmt(calcularTotal())}`;
+    if (nombre) msg += `\n\nNombre: ${nombre}`;
+    if (zona) msg += `\nZona de entrega: ${zona}`;
+    msg += '\n\n¿Me ayudas a coordinar el pago y el envío? 🙏';
+
+    const url = `https://wa.me/${waNumero}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank', 'noopener');
+  });
+
+  // Render inicial
+  render();
+</script>

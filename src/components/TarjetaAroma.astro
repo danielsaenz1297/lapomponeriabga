@@ -1,0 +1,52 @@
+---
+import type { Aroma } from '../data/aromas';
+import { precios } from '../data/config';
+
+interface Props {
+  aroma: Aroma;
+}
+const { aroma } = Astro.props;
+
+// Datos mínimos que el carrito necesita (sin categoría ni descripción largas)
+const productoJSON = JSON.stringify({
+  id: aroma.id,
+  nombre: aroma.nombre,
+  imagen: aroma.imagen,
+  emoji: aroma.emoji,
+});
+---
+
+<article class="group flex flex-col overflow-hidden rounded-3xl bg-white shadow-tarjeta ring-1 ring-marca-rosa/30 transition-transform duration-300 hover:-translate-y-1">
+  <div class="relative aspect-[4/3] overflow-hidden">
+    <img
+      src={aroma.imagen}
+      alt={`AromaPom aroma ${aroma.nombre}`}
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      loading="lazy"
+    />
+    <span
+      class="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-bold text-white shadow"
+      style={`background-color: ${aroma.color}`}
+    >
+      {aroma.emoji} {aroma.nombre}
+    </span>
+  </div>
+
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="font-display text-lg font-extrabold text-marca-morado">{aroma.nombre}</h3>
+    <p class="mt-1 flex-1 text-sm text-marca-morado/70">{aroma.descripcion}</p>
+
+    <div class="mt-4 flex items-center justify-between gap-3">
+      <span class="font-display text-lg font-extrabold text-marca-fucsia">
+        ${precios.unidad.toLocaleString('es-CO')}
+      </span>
+      <button
+        type="button"
+        class="btn-primario px-4 py-2 text-sm"
+        data-agregar={productoJSON}
+      >
+        Elegir 🎁
+      </button>
+    </div>
+  </div>
+</article>

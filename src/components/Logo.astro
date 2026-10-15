@@ -1,0 +1,33 @@
+---
+/**
+ * Logo tipográfico de "La Pomponería BGA".
+ * Reproduce el estilo del logo de marca con texto (sin depender de una imagen),
+ * para que se vea nítido en cualquier tamaño y en el header.
+ */
+interface Props {
+  class?: string;
+}
+const { class: clase = '' } = Astro.props;
+---
+
+<a href="/" class={`inline-flex items-center gap-2 group ${clase}`} aria-label="La Pomponería BGA - Inicio">
+  <!-- Pompón decorativo -->
+  <span class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center">
+    <svg viewBox="0 0 40 40" class="h-10 w-10 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true">
+      <g>
+        {Array.from({ length: 16 }).map((_, i) => {
+          const ang = (i / 16) * Math.PI * 2;
+          const x = 20 + Math.cos(ang) * 15;
+          const y = 20 + Math.sin(ang) * 15;
+          const colores = ['#E6168B', '#9B5DE5', '#5B2A86', '#F7A6D3', '#FFC94D', '#2FA4C7'];
+          return <line x1="20" y1="20" x2={x} y2={y} stroke={colores[i % colores.length]} stroke-width="3" stroke-linecap="round" />;
+        })}
+        <circle cx="20" cy="20" r="6" fill="#fff" stroke="#E6168B" stroke-width="1.5" />
+      </g>
+    </svg>
+  </span>
+  <span class="leading-none">
+    <span class="block font-display text-lg font-extrabold text-marca-morado sm:text-xl">La Pomponería</span>
+    <span class="block text-xs font-bold tracking-[0.3em] text-marca-fucsia">B G A</span>
+  </span>
+</a>
