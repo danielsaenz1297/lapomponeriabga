@@ -1,0 +1,17 @@
+# Configuración de Cloudflare para las Pages Functions (reseñas).
+# El "database_id" se completa cuando crees la base D1 (ver GUIA-RESENAS.md).
+
+name = "tienda"
+main = "src/worker.js"
+compatibility_date = "2024-11-01"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+# Enlace a la base de datos D1. El código accede a ella con env.DB
+[[d1_databases]]
+binding = "DB"
+database_name = "resenas-pomponeria"
+database_id = "9e22ee21-c2d8-46be-8dfd-6095df3df2bf"

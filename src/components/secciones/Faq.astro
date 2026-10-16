@@ -1,0 +1,47 @@
+---
+import { faqs, negocio } from '../../data/config';
+
+const waPedido = `https://wa.me/${negocio.whatsapp.numero}?text=${encodeURIComponent('¡Hola La Pomponería BGA! 💜 Tengo una pregunta sobre los AromaPoms.')}`;
+---
+
+<section id="faq" class="scroll-mt-20 py-16">
+  <div class="contenedor">
+    <div class="mx-auto max-w-2xl text-center">
+      <span class="chip">❓ Resolvemos tus dudas</span>
+      <h2 class="titulo-seccion mt-3">Preguntas frecuentes</h2>
+      <p class="mt-3 text-marca-morado/70">
+        Todo lo que necesitas saber antes de pedir tu AromaPom.
+      </p>
+    </div>
+
+    <div class="mx-auto mt-10 max-w-3xl space-y-3">
+      {faqs.map((item) => (
+        <details class="group rounded-2xl border border-marca-rosa/40 bg-white px-5 shadow-sm transition hover:border-marca-fucsia/40">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-bold text-marca-morado marker:hidden [&::-webkit-details-marker]:hidden">
+            <span>{item.pregunta}</span>
+            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-marca-rosaClaro text-marca-fucsia transition-transform duration-300 group-open:rotate-45" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </span>
+          </summary>
+          <p class="pb-5 text-sm leading-relaxed text-marca-morado/70">
+            {item.respuesta}
+          </p>
+        </details>
+      ))}
+    </div>
+
+    <!-- CTA de ayuda -->
+    <div class="mx-auto mt-8 max-w-3xl rounded-3xl bg-marca-rosaClaro p-6 text-center">
+      <p class="font-bold text-marca-morado">¿No encuentras tu respuesta?</p>
+      <p class="mt-1 text-sm text-marca-morado/70">Escríbenos y con gusto te ayudamos. 💜</p>
+      <a href={waPedido} target="_blank" rel="noopener" class="btn-whatsapp mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+          <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24z"/>
+        </svg>
+        Preguntar por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>

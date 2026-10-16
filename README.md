@@ -13,6 +13,7 @@ coordinan directamente por chat.
 - [Astro](https://astro.build/) — generador de sitios estáticos, rápido y liviano.
 - [Tailwind CSS](https://tailwindcss.com/) — estilos.
 - Carrito en JavaScript (vanilla) con `localStorage`.
+- **Reseñas dinámicas** con Cloudflare D1 + Pages Functions (opcional, ver `GUIA-RESENAS.md`).
 - Listo para desplegar en **Cloudflare Pages**.
 
 ## 🚀 Desarrollo local

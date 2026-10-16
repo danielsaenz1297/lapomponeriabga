@@ -8,6 +8,8 @@ const navItems = [
   { label: 'Características', href: '/#caracteristicas' },
   { label: 'Cómo funciona', href: '/#como-funciona' },
   { label: 'Nosotras', href: '/#nosotras' },
+  { label: 'Reseñas', href: '/#resenas' },
+  { label: 'FAQ', href: '/#faq' },
   { label: 'Contacto', href: '/#contacto' },
 ];
 ---
@@ -17,7 +19,7 @@ const navItems = [
     <Logo />
 
     <!-- Navegación de escritorio -->
-    <nav class="hidden items-center gap-6 lg:flex" aria-label="Navegación principal">
+    <nav class="hidden items-center gap-4 xl:gap-5 lg:flex" aria-label="Navegación principal">
       {navItems.map((item) => (
         <a
           href={item.href}

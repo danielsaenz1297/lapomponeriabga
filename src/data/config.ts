@@ -129,3 +129,67 @@ export const caracteristicas = [
 
 // Espacios ideales para ubicar el AromaPom
 export const espaciosIdeales = ['Habitación', 'Baño', 'Oficina', 'Clóset', 'Escritorio'];
+
+// Preguntas frecuentes (sección FAQ)
+export const faqs = [
+  {
+    pregunta: '¿Qué es un AromaPom?',
+    respuesta:
+      'Es un difusor de aroma 100% artesanal hecho a mano: una base esférica con un pompón de colores al estilo Wayúu que absorbe y difunde la fragancia en tu espacio. Además incluye un mensaje motivacional y un kit de reciclaje.',
+  },
+  {
+    pregunta: '¿Cuánto cuesta?',
+    respuesta:
+      'Cada AromaPom tiene un precio de $35.000. La bolsa de regalo va incluida sin costo adicional.',
+  },
+  {
+    pregunta: '¿Cómo hago mi pedido?',
+    respuesta:
+      'Elige tu aroma, selecciona la bolsa de regalo (paso 2) y agrégalo al carrito. Cuando termines, pulsa “Finalizar pedido por WhatsApp” y nos llegará tu pedido con el detalle. Allí confirmamos disponibilidad, pago y envío.',
+  },
+  {
+    pregunta: '¿Qué medios de pago aceptan?',
+    respuesta:
+      'Transferencia bancaria, Nequi, Daviplata y efectivo. Los datos para el pago se comparten directamente por WhatsApp al confirmar tu pedido.',
+  },
+  {
+    pregunta: '¿Hacen envíos? ¿A dónde?',
+    respuesta:
+      'Realizamos entregas en Bucaramanga y su área metropolitana, según la zona. Los detalles de la entrega se coordinan por WhatsApp.',
+  },
+  {
+    pregunta: '¿La bolsa de regalo tiene costo?',
+    respuesta:
+      'No. Cada AromaPom incluye su bolsa de regalo sin costo adicional. Tenemos 8 ediciones especiales para elegir según la ocasión.',
+  },
+  {
+    pregunta: '¿Puedo elegir una bolsa distinta por cada AromaPom?',
+    respuesta:
+      'Sí. La bolsa se elige por producto, así que puedes pedir varios aromas y asignar a cada uno la edición de bolsa que prefieras.',
+  },
+  {
+    pregunta: '¿Cuántos aromas hay para elegir?',
+    respuesta:
+      'Tenemos 15 aromas organizados en tres familias: suaves, fuertes y cítricos. Puedes elegir tu favorito según el ambiente que quieras lograr.',
+  },
+  {
+    pregunta: '¿Cuánto dura el aroma?',
+    respuesta:
+      'El envase está elaborado con parafina 100% refinada y fragancia concentrada de larga duración. Para renovar la experiencia puedes cambiar su ubicación cuando lo necesites.',
+  },
+  {
+    pregunta: '¿Cómo se usa y dónde lo coloco?',
+    respuesta:
+      'Retíralo de su empaque y ubícalo sobre una superficie firme y ventilada. Es ideal para espacios pequeños o medianos como la habitación, el baño, la oficina, el clóset o el escritorio.',
+  },
+  {
+    pregunta: '¿Para qué sirve el kit de reciclaje?',
+    respuesta:
+      'Cuando tu AromaPom se termine, el kit te permite reutilizar el envase y darle una segunda vida convirtiéndolo en una velita. Así cuidamos juntos el planeta.',
+  },
+  {
+    pregunta: '¿Tienen descuentos o beneficios?',
+    respuesta:
+      'Sí. Con nuestra tarjeta de fidelidad obtienes 15% OFF en tu quinta compra y un obsequio gratis en tu décimo pedido. Además, cada compra incluye un pequeño obsequio de cortesía.',
+  },
+];

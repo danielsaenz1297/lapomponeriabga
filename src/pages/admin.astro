@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout titulo="Administración de reseñas · La Pomponería BGA">
+  <section class="contenedor py-16">
+    <h1 class="font-display text-3xl font-extrabold text-marca-morado">Moderación de reseñas</h1>
+    <p class="mt-2 text-marca-morado/70">Aprueba o elimina las reseñas enviadas por tus clientas.</p>
+
+    <!-- Login con token -->
+    <div id="login" class="mt-6 max-w-md rounded-2xl bg-white p-5 shadow-tarjeta ring-1 ring-marca-rosa/30">
+      <label for="token" class="block text-sm font-semibold text-marca-morado/80">Clave de administración</label>
+      <input type="password" id="token" class="mt-1 w-full rounded-xl border border-marca-rosa/60 px-3 py-2 text-sm focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30" placeholder="Tu ADMIN_TOKEN" />
+      <button type="button" id="btn-entrar" class="btn-primario mt-3 w-full">Entrar</button>
+      <p id="login-error" class="mt-2 hidden text-sm text-red-700"></p>
+    </div>
+
+    <!-- Panel -->
+    <div id="panel" class="mt-6 hidden">
+      <p id="panel-vacio" class="hidden text-marca-morado/60">No hay reseñas todavía.</p>
+      <div id="panel-lista" class="space-y-3"></div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  let token = '';
+  const login = document.getElementById('login');
+  const panel = document.getElementById('panel');
+  const lista = document.getElementById('panel-lista');
+  const vacio = document.getElementById('panel-vacio');
+  const loginError = document.getElementById('login-error');
+
+  const escapar = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const estrellasHtml = (n) => '★★★★★☆☆☆☆☆'.slice(5 - n, 10 - n);
+
+  async function cargar() {
+    const res = await fetch('/api/admin/resenas', { headers: { Authorization: `Bearer ${token}` } });
+    if (res.status === 401) { loginError.textContent = 'Clave incorrecta.'; loginError.classList.remove('hidden'); return false; }
+    const data = await res.json();
+    login.classList.add('hidden');
+    panel.classList.remove('hidden');
+    lista.innerHTML = '';
+    const resenas = data.resenas || [];
+    if (resenas.length === 0) { vacio.classList.remove('hidden'); return true; }
+    vacio.classList.add('hidden');
+    resenas.forEach((r) => {
+      const estado = r.aprobada ? '<span class="text-green-700 font-bold">Aprobada</span>' : '<span class="text-amber-600 font-bold">Pendiente</span>';
+      const card = document.createElement('div');
+      card.className = 'rounded-2xl bg-white p-4 shadow-sm ring-1 ring-marca-rosa/30';
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <span class="text-marca-amarillo">${estrellasHtml(r.calificacion)}</span>
+            <span class="ml-2 text-sm">${estado}</span>
+            <p class="mt-1 font-bold text-marca-morado">${escapar(r.nombre)}</p>
+            <p class="mt-1 text-sm text-marca-morado/80">${escapar(r.comentario)}</p>
+            <p class="mt-1 text-xs text-marca-morado/50">${escapar(r.creada_en)}</p>
+          </div>
+          <div class="flex shrink-0 flex-col gap-2">
+            ${r.aprobada
+              ? `<button data-accion="ocultar" data-id="${r.id}" class="btn-contorno px-3 py-1 text-xs">Ocultar</button>`
+              : `<button data-accion="aprobar" data-id="${r.id}" class="btn-primario px-3 py-1 text-xs">Aprobar</button>`}
+            <button data-accion="eliminar" data-id="${r.id}" class="rounded-full border-2 border-red-300 px-3 py-1 text-xs font-bold text-red-600 hover:bg-red-50">Eliminar</button>
+          </div>
+        </div>`;
+      lista.appendChild(card);
+    });
+    return true;
+  }
+
+  document.getElementById('btn-entrar').addEventListener('click', async () => {
+    token = document.getElementById('token').value.trim();
+    loginError.classList.add('hidden');
+    if (!token) return;
+    await cargar();
+  });
+
+  lista.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-accion]');
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+    const accion = btn.dataset.accion;
+    const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+    if (accion === 'eliminar') {
+      if (!confirm('¿Eliminar esta reseña definitivamente?')) return;
+      await fetch('/api/admin/resenas', { method: 'DELETE', headers, body: JSON.stringify({ id }) });
+    } else {
+      await fetch('/api/admin/resenas', { method: 'POST', headers, body: JSON.stringify({ id, aprobada: accion === 'aprobar' ? 1 : 0 }) });
+    }
+    await cargar();
+  });
+</script>
