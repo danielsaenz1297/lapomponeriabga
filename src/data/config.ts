@@ -160,7 +160,7 @@ export const faqs = [
   {
     pregunta: '¿La bolsa de regalo tiene costo?',
     respuesta:
-      'No. Cada AromaPom incluye su bolsa de regalo sin costo adicional. Tenemos 8 ediciones especiales para elegir según la ocasión.',
+      'No. Cada AromaPom incluye su bolsa de regalo sin costo adicional. Tenemos 9 ediciones especiales para elegir según la ocasión.',
   },
   {
     pregunta: '¿Puedo elegir una bolsa distinta por cada AromaPom?',

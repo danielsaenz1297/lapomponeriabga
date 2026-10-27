@@ -72,6 +72,22 @@
         ></textarea>
       </div>
 
+      <!-- Fotos (opcional) -->
+      <div class="mt-4">
+        <label for="resena-fotos" class="block text-sm font-semibold text-marca-morado/80">
+          Fotos <span class="font-normal text-marca-morado/50">(opcional, hasta 3)</span>
+        </label>
+        <input
+          type="file"
+          id="resena-fotos"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          class="mt-1 w-full cursor-pointer rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm text-marca-morado file:mr-3 file:rounded-full file:border-0 file:bg-marca-rosaClaro file:px-3 file:py-1 file:text-sm file:font-bold file:text-marca-fucsia hover:file:bg-marca-rosa/40"
+        />
+        <div id="resena-fotos-preview" class="mt-2 flex flex-wrap gap-2"></div>
+        <p class="mt-1 text-[11px] text-marca-morado/50">JPG, PNG o WebP · máx. 5 MB por foto.</p>
+      </div>
+
       <p id="resena-mensaje" class="mt-3 hidden rounded-xl px-3 py-2 text-sm"></p>
 
       <div class="mt-4 flex gap-3">
@@ -117,9 +133,21 @@
       resenas.forEach((r) => {
         const card = document.createElement('article');
         card.className = 'rounded-3xl bg-white p-5 shadow-tarjeta ring-1 ring-marca-rosa/30';
+        const fotos = Array.isArray(r.fotos) ? r.fotos : [];
+        const fotosHtml = fotos.length
+          ? `<div class="mt-3 flex flex-wrap gap-2">${fotos
+              .map(
+                (clave) =>
+                  `<a href="/api/foto/${encodeURI(clave)}" target="_blank" rel="noopener">
+                     <img src="/api/foto/${encodeURI(clave)}" alt="Foto de la reseña de ${escapar(r.nombre)}" class="h-16 w-16 rounded-xl object-cover ring-1 ring-marca-rosa/40 transition hover:scale-105" loading="lazy" />
+                   </a>`
+              )
+              .join('')}</div>`
+          : '';
         card.innerHTML = `
           <div class="text-xl text-marca-amarillo" aria-label="${r.calificacion} de 5 estrellas">${estrellasHtml(r.calificacion)}</div>
           <p class="mt-2 text-sm text-marca-morado/80">“${escapar(r.comentario)}”</p>
+          ${fotosHtml}
           <p class="mt-3 font-bold text-marca-morado">— ${escapar(r.nombre)}</p>`;
         lista?.appendChild(card);
       });
@@ -145,6 +173,39 @@
     e.addEventListener('mouseenter', () => pintar(v));
     e.addEventListener('mouseleave', () => pintar(seleccion));
     e.addEventListener('click', () => { seleccion = v; inputCalif.value = String(v); pintar(v); });
+  });
+
+  // ---- Fotos: previsualización y validación en cliente ----
+  const MAX_FOTOS = 3;
+  const MAX_BYTES = 5 * 1024 * 1024;
+  const TIPOS_OK = ['image/jpeg', 'image/png', 'image/webp'];
+  const inputFotos = document.getElementById('resena-fotos');
+  const preview = document.getElementById('resena-fotos-preview');
+
+  inputFotos?.addEventListener('change', () => {
+    preview.innerHTML = '';
+    const archivos = Array.from(inputFotos.files || []);
+    if (archivos.length > MAX_FOTOS) {
+      mostrarMensaje(`Solo puedes subir hasta ${MAX_FOTOS} fotos.`, false);
+      inputFotos.value = '';
+      return;
+    }
+    for (const f of archivos) {
+      if (!TIPOS_OK.includes(f.type)) {
+        mostrarMensaje('Solo se permiten imágenes JPG, PNG o WebP.', false);
+        inputFotos.value = ''; preview.innerHTML = ''; return;
+      }
+      if (f.size > MAX_BYTES) {
+        mostrarMensaje(`"${f.name}" supera los 5 MB.`, false);
+        inputFotos.value = ''; preview.innerHTML = ''; return;
+      }
+      const img = document.createElement('img');
+      img.className = 'h-14 w-14 rounded-lg object-cover ring-1 ring-marca-rosa/40';
+      img.src = URL.createObjectURL(f);
+      img.onload = () => URL.revokeObjectURL(img.src);
+      preview.appendChild(img);
+    }
+    if (mensaje) mensaje.classList.add('hidden');
   });
 
   // ---- Abrir / cerrar formulario ----
@@ -177,15 +238,20 @@
     btn.disabled = true;
     btn.textContent = 'Enviando…';
     try {
-      const res = await fetch('/api/resenas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, comentario, calificacion }),
-      });
+      // Se envía como FormData para incluir las fotos (si las hay)
+      const fd = new FormData();
+      fd.append('nombre', nombre);
+      fd.append('comentario', comentario);
+      fd.append('calificacion', String(calificacion));
+      const archivos = Array.from((inputFotos && inputFotos.files) || []).slice(0, MAX_FOTOS);
+      for (const f of archivos) fd.append('fotos', f);
+
+      const res = await fetch('/api/resenas', { method: 'POST', body: fd });
       const data = await res.json();
       if (res.ok) {
         mostrarMensaje(data.mensaje || '¡Gracias por tu reseña! 💜', true);
         form.reset();
+        if (preview) preview.innerHTML = '';
         seleccion = 0; inputCalif.value = '0'; pintar(0);
       } else {
         mostrarMensaje(data.error || 'No se pudo enviar. Intenta de nuevo.', false);

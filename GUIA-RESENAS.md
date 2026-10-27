@@ -54,6 +54,29 @@ npx wrangler d1 execute resenas-pomponeria --remote --file=db/schema.sql
 > El flag `--remote` es importante: aplica el esquema a la base real de Cloudflare
 > (sin él, se crearía solo en una base local de pruebas).
 
+## Paso 4b — Crear el bucket R2 para las fotos
+
+Las reseñas permiten adjuntar fotos (hasta 3, máx. 5 MB c/u). Se guardan en R2.
+
+```bash
+npx wrangler r2 bucket create resenas-fotos-pomponeria
+```
+
+El `wrangler.toml` ya trae el binding configurado:
+
+```toml
+[[r2_buckets]]
+binding = "FOTOS"
+bucket_name = "resenas-fotos-pomponeria"
+```
+
+> Si ya habías creado la base ANTES de la función de fotos, aplica la migración
+> para agregar la columna `fotos`:
+> ```bash
+> npx wrangler d1 execute resenas-pomponeria --remote --file=db/migracion-fotos.sql
+> ```
+> (Si creaste la base desde cero con `db/schema.sql`, ya incluye la columna; omite esto.)
+
 ## Paso 5 — Definir la clave de administración (ADMIN_TOKEN)
 
 En el panel de Cloudflare:
@@ -65,15 +88,18 @@ En el panel de Cloudflare:
    - Márcala como **Secret** (cifrada).
 3. Guarda.
 
-## Paso 6 — Enlazar la base D1 al proyecto de Pages
+## Paso 6 — Enlazar los bindings al proyecto
 
-En el panel de Cloudflare:
+Si despliegas con `wrangler deploy` usando el `wrangler.toml`, los bindings `DB` y
+`FOTOS` ya quedan enlazados automáticamente. No necesitas tocar el panel (salvo el
+secreto `ADMIN_TOKEN` del paso anterior).
 
-1. **Workers & Pages → tu proyecto → Settings → Functions → D1 database bindings**.
-2. Agrega un binding:
-   - **Variable name:** `DB`
-   - **D1 database:** `resenas-pomponeria`
-3. Guarda y vuelve a desplegar (**Deployments → Retry deployment** o haz un nuevo push).
+Si gestionas los bindings desde el panel de Cloudflare, agrégalos en
+**tu proyecto → Settings**:
+- **D1:** variable `DB` → base `resenas-pomponeria`.
+- **R2:** variable `FOTOS` → bucket `resenas-fotos-pomponeria`.
+
+Luego vuelve a desplegar.
 
 ---
 
@@ -81,7 +107,8 @@ En el panel de Cloudflare:
 
 ### Tus clientas
 En la sección **Reseñas** del sitio pulsan "Escribir una reseña", eligen estrellas,
-nombre y comentario, y envían. La reseña queda **pendiente** (no se ve aún).
+nombre, comentario y, si quieren, adjuntan **hasta 3 fotos** (JPG/PNG/WebP, máx. 5 MB
+c/u) desde su dispositivo. La reseña queda **pendiente** (no se ve aún).
 
 ### Tú (moderación)
 Entra a **`https://tu-sitio.pages.dev/admin`**, escribe tu `ADMIN_TOKEN` y verás todas

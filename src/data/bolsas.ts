@@ -1,5 +1,5 @@
 /**
- * Bolsas de regalo personalizadas (8 ediciones especiales).
+ * Bolsas de regalo personalizadas (9 ediciones especiales).
  * El cliente elige UNA bolsa por cada AromaPom (paso 2 de la compra).
  * La bolsa va incluida SIN costo adicional.
  *
@@ -16,6 +16,8 @@ export interface Bolsa {
   frase: string;
   lado1: string;
   lado2?: string;
+  /** Si está agotada: se muestra como "Agotada" y no se puede seleccionar. */
+  agotada?: boolean;
 }
 
 export const bolsas: Bolsa[] = [
@@ -53,6 +55,7 @@ export const bolsas: Bolsa[] = [
     frase: 'Abre tus alas y vuela hacia nuevos horizontes, persigue tus sueños.',
     lado1: '/img/bolsas/nuevos-horizontes-lado1.jpeg',
     lado2: '/img/bolsas/nuevos-horizontes-lado2.jpeg',
+    agotada: true,
   },
   {
     id: 'suenos-mama',
@@ -67,6 +70,13 @@ export const bolsas: Bolsa[] = [
     frase: 'Edición especial de temporada: Navidad es Familia.',
     lado1: '/img/bolsas/navidad-lado1.jpeg',
     lado2: '/img/bolsas/navidad-lado2.jpeg',
+  },
+  {
+    id: 'navidad-rojo',
+    nombre: 'Navidad Rojo',
+    frase: 'Que esta Navidad huela a hogar y nos recuerde que, unidos, siempre renace la esperanza.',
+    lado1: '/img/bolsas/navidad-rojo-lado1.jpeg',
+    lado2: '/img/bolsas/navidad-rojo-lado2.jpeg',
   },
   {
     id: 'tradicional',

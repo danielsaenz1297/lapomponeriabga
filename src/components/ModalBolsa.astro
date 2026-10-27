@@ -41,18 +41,26 @@ import { bolsas } from '../data/bolsas';
       {bolsas.map((b, i) => (
         <button
           type="button"
-          class="opcion-bolsa relative flex flex-col overflow-hidden rounded-2xl border-2 border-marca-rosa/40 bg-white text-left transition hover:border-marca-fucsia focus:outline-none focus-visible:ring-4 focus-visible:ring-marca-fucsia/30"
-          data-bolsa-id={b.id}
+          disabled={b.agotada}
+          class={`opcion-bolsa relative flex flex-col overflow-hidden rounded-2xl border-2 border-marca-rosa/40 bg-white text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-marca-fucsia/30 ${b.agotada ? 'cursor-not-allowed opacity-60' : 'hover:border-marca-fucsia'}`}
+          data-bolsa-id={b.agotada ? '' : b.id}
           data-bolsa-nombre={b.nombre}
           data-bolsa-imagen={b.lado1}
+          data-agotada={b.agotada ? 'true' : 'false'}
           aria-pressed={i === 0 ? 'true' : 'false'}
+          aria-disabled={b.agotada ? 'true' : 'false'}
         >
           <div class="relative aspect-square overflow-hidden bg-marca-rosaClaro">
-            <img src={b.lado1} alt={`Bolsa ${b.nombre}`} class="h-full w-full object-cover" loading="lazy" />
-            {b.lado2 && (
+            <img src={b.lado1} alt={`Bolsa ${b.nombre}`} class={`h-full w-full object-cover ${b.agotada ? 'grayscale' : ''}`} loading="lazy" />
+            {b.lado2 && !b.agotada && (
               <img src={b.lado2} alt={`Bolsa ${b.nombre} reverso`} class="miniatura-lado2 absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 hover:opacity-100" loading="lazy" />
             )}
             <span class="indicador-check absolute right-2 top-2 hidden h-6 w-6 items-center justify-center rounded-full bg-marca-fucsia text-xs font-bold text-white">✓</span>
+            {b.agotada && (
+              <span class="absolute inset-0 flex items-center justify-center">
+                <span class="rotate-[-8deg] rounded-full bg-marca-morado/90 px-3 py-1 text-xs font-extrabold uppercase text-white shadow ring-2 ring-white">Agotada</span>
+              </span>
+            )}
           </div>
           <span class="px-2 py-2 text-center text-xs font-bold text-marca-morado">{b.nombre}</span>
         </button>

@@ -49,6 +49,12 @@ import Layout from '../layouts/Layout.astro';
       const estado = r.aprobada ? '<span class="text-green-700 font-bold">Aprobada</span>' : '<span class="text-amber-600 font-bold">Pendiente</span>';
       const card = document.createElement('div');
       card.className = 'rounded-2xl bg-white p-4 shadow-sm ring-1 ring-marca-rosa/30';
+      const fotos = Array.isArray(r.fotos) ? r.fotos : [];
+      const fotosHtml = fotos.length
+        ? `<div class="mt-2 flex flex-wrap gap-2">${fotos
+            .map((clave) => `<a href="/api/foto/${encodeURI(clave)}" target="_blank" rel="noopener"><img src="/api/foto/${encodeURI(clave)}" alt="Foto de la reseña" class="h-16 w-16 rounded-lg object-cover ring-1 ring-marca-rosa/40" loading="lazy" /></a>`)
+            .join('')}</div>`
+        : '';
       card.innerHTML = `
         <div class="flex items-start justify-between gap-3">
           <div>
@@ -56,6 +62,7 @@ import Layout from '../layouts/Layout.astro';
             <span class="ml-2 text-sm">${estado}</span>
             <p class="mt-1 font-bold text-marca-morado">${escapar(r.nombre)}</p>
             <p class="mt-1 text-sm text-marca-morado/80">${escapar(r.comentario)}</p>
+            ${fotosHtml}
             <p class="mt-1 text-xs text-marca-morado/50">${escapar(r.creada_en)}</p>
           </div>
           <div class="flex shrink-0 flex-col gap-2">

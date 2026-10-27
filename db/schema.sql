@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS resenas (
   comentario TEXT NOT NULL,
   -- 0 = pendiente de aprobación, 1 = aprobada (visible en el sitio)
   aprobada INTEGER NOT NULL DEFAULT 0,
+  -- JSON con las claves de las fotos en R2, p. ej. ["resenas/abc.jpg", ...]. "[]" si no hay.
+  fotos TEXT NOT NULL DEFAULT '[]',
   creada_en TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

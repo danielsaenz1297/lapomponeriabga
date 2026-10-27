@@ -22,6 +22,8 @@ export interface Aroma {
   imagen: string;
   color: string;
   emoji: string;
+  /** Marca el aroma como "Más vendido" (muestra un banner en la tarjeta). */
+  masVendido?: boolean;
 }
 
 export const categorias: Record<
@@ -82,6 +84,7 @@ export const aromas: Aroma[] = [
     imagen: '/img/aromas/flor-de-loto.jpeg',
     color: '#EC87C0',
     emoji: '🪷',
+    masVendido: true,
   },
   {
     id: 'manzanilla',
@@ -138,6 +141,7 @@ export const aromas: Aroma[] = [
     imagen: '/img/aromas/morita.jpeg',
     color: '#9B2F8F',
     emoji: '🫐',
+    masVendido: true,
   },
   {
     id: 'manzana-canela',
@@ -176,6 +180,7 @@ export const aromas: Aroma[] = [
     imagen: '/img/aromas/maracuya.jpeg',
     color: '#F5A623',
     emoji: '🥭',
+    masVendido: true,
   },
   {
     id: 'pina',

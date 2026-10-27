@@ -181,9 +181,13 @@ import { bolsas, bolsaPorDefecto } from '../data/bolsas';
     // Clic en el fondo del overlay (fuera del modal) cierra
     const ov = getBolsaOverlay();
     if (ov && e.target === ov) { cerrarModalBolsa(); return; }
-    // Seleccionar una opción de bolsa
+    // Seleccionar una opción de bolsa (ignorar las agotadas)
     const op = e.target.closest('.opcion-bolsa');
-    if (op) { marcarBolsa(op.dataset.bolsaId); return; }
+    if (op) {
+      if (op.dataset.agotada === 'true' || !op.dataset.bolsaId) return;
+      marcarBolsa(op.dataset.bolsaId);
+      return;
+    }
     // Confirmar
     if (e.target.closest('#btn-confirmar-bolsa')) { confirmarBolsa(); return; }
   });

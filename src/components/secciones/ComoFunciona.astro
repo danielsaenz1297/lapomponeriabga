@@ -40,14 +40,22 @@ import { incluye, comoUsar } from '../../data/config';
       </div>
     </div>
 
-    <!-- Imagen explicativa -->
-    <div class="mt-10 overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
-      <img
-        src="/img/marca/que-incluye-como-usar.jpeg"
-        alt="Materiales incluidos y pasos de uso de los AromaPoms"
-        class="w-full object-cover"
-        loading="lazy"
-      />
+    <!-- Video explicativo -->
+    <div class="mt-10 flex justify-center">
+      <div class="w-full max-w-xs overflow-hidden rounded-3xl bg-black shadow-suave ring-4 ring-white">
+        <video
+          class="h-auto w-full"
+          controls
+          playsinline
+          preload="metadata"
+          poster="/video/como-funciona-poster.jpg"
+          aria-label="Video: cómo se arma y usa el AromaPom"
+        >
+          <source src="/video/como-funciona.mp4" type="video/mp4" />
+          Tu navegador no admite la reproducción de video.
+        </video>
+      </div>
     </div>
+    <p class="mt-3 text-center text-sm text-marca-morado/60">▶️ Mira cómo preparar tu AromaPom</p>
   </div>
 </section>
