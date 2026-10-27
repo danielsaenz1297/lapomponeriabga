@@ -151,6 +151,7 @@ export const aromas: Aroma[] = [
     imagen: '/img/aromas/manzana-canela.jpeg',
     color: '#E6468B',
     emoji: '🍎',
+    masVendido: true,
   },
   {
     id: 'cherry',
