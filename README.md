@@ -93,3 +93,5 @@ Para cambiar una **foto de aroma**, reemplaza el archivo correspondiente en
 - WhatsApp: +57 322 358 7255
 - Instagram: [@lapomponeria.bga](https://instagram.com/lapomponeria.bga)
 - TikTok: [@lapomponeria.bga](https://www.tiktok.com/@lapomponeria.bga)
+
+<!-- Redeploy: orden de la galería de Características (donde-colocar, artesanal, segunda-vida). -->
