@@ -3,29 +3,22 @@ import { negocio, beneficios } from '../../data/config';
 ---
 
 <section id="nosotras" class="scroll-mt-20 py-16">
-  <div class="contenedor grid items-center gap-10 lg:grid-cols-2">
-    <div class="order-2 overflow-hidden rounded-3xl shadow-suave ring-4 ring-white lg:order-1">
-      <img
-        src="/img/marca/aromapoms-trio.jpeg"
-        alt="Tres AromaPoms con mensajes positivos de La Pomponería BGA"
-        class="w-full object-cover"
-        loading="lazy"
-      />
-    </div>
-
-    <div class="order-1 lg:order-2">
-      <span class="chip">💜 Nuestra historia</span>
-      <h2 class="titulo-seccion mt-3">Pequeños detalles, grandes momentos</h2>
-      <p class="mt-4 text-marca-morado/80">
-        {negocio.descripcionLarga}
-      </p>
-      <p class="mt-3 text-marca-morado/70">
-        Aromas que inspiran, mensajes que conectan. Cada AromaPom lleva color, cariño y un
-        mensaje positivo para alegrar tus espacios o sorprender a quien quieres.
-      </p>
+  <div class="contenedor">
+    <div class="grid items-start gap-10 lg:grid-cols-2">
+      <div>
+        <span class="chip">💜 Nuestra historia</span>
+        <h2 class="titulo-seccion mt-3">Pequeños detalles, grandes momentos</h2>
+        <p class="mt-4 text-marca-morado/80">
+          {negocio.descripcionLarga}
+        </p>
+        <p class="mt-3 text-marca-morado/70">
+          Aromas que inspiran, mensajes que conectan. Cada AromaPom lleva color, cariño y un
+          mensaje positivo para alegrar tus espacios o sorprender a quien quieres.
+        </p>
+      </div>
 
       <!-- Beneficios de fidelidad -->
-      <div class="mt-7 space-y-3">
+      <div class="space-y-3">
         {beneficios.map((b) => (
           <div class="flex items-start gap-3 rounded-2xl bg-marca-rosaClaro p-4">
             <span class="text-2xl" aria-hidden="true">
@@ -38,6 +31,19 @@ import { negocio, beneficios } from '../../data/config';
           </div>
         ))}
       </div>
+    </div>
+
+    <!-- Galería de fotos -->
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      <figure class="overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
+        <img src="/img/caracteristicas/donde-colocar.jpeg" alt="Espacios ideales para colocar el AromaPom: baño, oficina y habitación" class="w-full object-cover" loading="lazy" />
+      </figure>
+      <figure class="overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
+        <img src="/img/caracteristicas/segunda-vida.jpeg" alt="Detalle artesanal del AromaPom: pompón Wayúu, parafina refinada y mensajes motivacionales" class="w-full object-cover" loading="lazy" />
+      </figure>
+      <figure class="overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
+        <img src="/img/caracteristicas/artesanal.jpeg" alt="Kit de reciclaje: cómo darle una segunda vida al AromaPom convirtiéndolo en velita" class="w-full object-cover" loading="lazy" />
+      </figure>
     </div>
   </div>
 </section>
