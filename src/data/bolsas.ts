@@ -48,6 +48,7 @@ export const bolsas: Bolsa[] = [
     frase: 'Lo que el alma reconoce, el corazón aprende a cuidar.',
     lado1: '/img/bolsas/cofre-amistad-lado1.jpeg',
     lado2: '/img/bolsas/cofre-amistad-lado2.jpeg',
+    agotada: true,
   },
   {
     id: 'nuevos-horizontes',
@@ -63,6 +64,7 @@ export const bolsas: Bolsa[] = [
     frase: 'Mientras cuidabas de todos, también construías tus propios sueños.',
     lado1: '/img/bolsas/suenos-mama-lado1.jpeg',
     lado2: '/img/bolsas/suenos-mama-lado2.jpeg',
+    agotada: true,
   },
   {
     id: 'navidad',
