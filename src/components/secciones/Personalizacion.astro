@@ -41,7 +41,7 @@ const imagenes = [
     </div>
 
     <!-- Fotos del servicio -->
-    <div class="mt-10 grid items-start gap-6 md:grid-cols-3">
+    <div class="mt-10 grid items-center gap-6 md:grid-cols-3">
       {imagenes.map((img) => (
         <figure class="overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
           <img src={img.src} alt={img.alt} class="h-auto w-full" width={img.w} height={img.h} loading="lazy" />
