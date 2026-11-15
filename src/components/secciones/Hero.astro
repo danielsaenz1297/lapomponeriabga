@@ -2,7 +2,24 @@
 import { negocio, precios } from '../../data/config';
 ---
 
-<section id="inicio" class="relative overflow-hidden bg-degradado-marca">
+<!-- 1) Imagen principal: lo primero que se ve al entrar -->
+<section id="inicio" class="relative overflow-hidden bg-degradado-marca pt-8 md:pt-10">
+  <div class="contenedor relative">
+    <div class="mx-auto max-w-xl overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
+      <img
+        src="/img/marca/hero-principal.jpeg"
+        alt="La Pomponería BGA: AromaPoms $35.000, Yessence Car $25.000, Popoff $20.000 y Gloss $10.000"
+        class="h-full w-full object-cover"
+        width="1254"
+        height="1254"
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- 2) Presentación de AromaPoms (el hero de antes) -->
+<section class="relative overflow-hidden bg-degradado-marca">
   <!-- Burbujas decorativas -->
   <div class="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-marca-rosa/30 blur-3xl"></div>
   <div class="pointer-events-none absolute -right-10 top-20 h-56 w-56 rounded-full bg-marca-lila/20 blur-3xl"></div>
@@ -50,7 +67,6 @@ import { negocio, precios } from '../../data/config';
           class="h-full w-full object-cover"
           width="843"
           height="1264"
-          fetchpriority="high"
         />
       </div>
       <span class="absolute -bottom-4 -left-4 rotate-[-6deg] rounded-2xl bg-marca-amarillo px-4 py-2 font-display font-extrabold text-marca-morado shadow-tarjeta">

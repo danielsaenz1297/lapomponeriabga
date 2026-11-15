@@ -82,12 +82,16 @@ import { bolsas, bolsaPorDefecto } from '../data/bolsas';
   </div>
 </aside>
 
-<script define:vars={{ waNumero: negocio.whatsapp.numero, precioUnidad: precios.unidad, bolsaDefault: bolsaPorDefecto }}>
+<script define:vars={{ waNumero: negocio.whatsapp.numero, precioUnidad: precios.unidad, bolsaDefault: bolsaPorDefecto, bolsasValidas: bolsas.map((b) => b.id) }}>
   // ====== Estado del carrito (persistido en localStorage) ======
   // Cada item es la combinación aroma + bolsa. La clave es `${aromaId}__${bolsaId}`.
   const CLAVE = 'pomponeria-carrito-v2';
   const cargar = () => {
-    try { return JSON.parse(localStorage.getItem(CLAVE) || '[]'); } catch { return []; }
+    try {
+      const items = JSON.parse(localStorage.getItem(CLAVE) || '[]');
+      // Descarta bolsas que ya no se venden (ej. la edición tradicional)
+      return items.filter((it) => !it.bolsaId || bolsasValidas.includes(it.bolsaId));
+    } catch { return []; }
   };
   const guardar = (items) => localStorage.setItem(CLAVE, JSON.stringify(items));
 
@@ -367,11 +371,19 @@ import { bolsas, bolsaPorDefecto } from '../data/bolsas';
     if (!btn) return;
     try {
       const p = JSON.parse(btn.dataset.agregarProducto);
-      const selects = Array.from(btn.closest('[data-producto]')?.querySelectorAll('select[data-opcion]') || []);
-      const partes = selects.map((sel) => sel.dataset.opcion + ': ' + sel.value);
+      const campos = Array.from(btn.closest('[data-producto]')?.querySelectorAll('select[data-opcion], input[data-opcion]') || []);
+      // Los campos de texto libre vacíos se omiten
+      const llenos = campos.filter((c) => c.value.trim() !== '');
+      const partes = llenos.map((c) => c.dataset.opcion + ': ' + c.value.trim());
       if (p.detalleFijo) partes.push(p.detalleFijo);
       const detalle = partes.join(' · ');
-      const clave = [p.id, ...selects.map((sel) => sel.value)].join('__');
+      // Si la opción elegida define su propio precio, reemplaza al precio base
+      let precioItem = p.precio;
+      campos.forEach((c) => {
+        const op = c.tagName === 'SELECT' ? c.selectedOptions[0] : null;
+        if (op && op.dataset.precio) precioItem = Number(op.dataset.precio);
+      });
+      const clave = [p.id, ...llenos.map((c) => c.value.trim().toLowerCase())].join('__');
       const existente = carrito.find((it) => it.clave === clave);
       if (existente) {
         existente.cantidad += 1;
@@ -382,7 +394,7 @@ import { bolsas, bolsaPorDefecto } from '../data/bolsas';
           nombre: p.nombre,
           emoji: p.emoji,
           imagen: p.imagen,
-          precio: p.precio,
+          precio: precioItem,
           detalle,
           cantidad: 1,
         });

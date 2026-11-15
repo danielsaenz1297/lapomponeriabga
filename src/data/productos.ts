@@ -7,7 +7,12 @@
 export interface OpcionProducto {
   /** Etiqueta del selector, ej. "Aroma" */
   etiqueta: string;
-  valores: { nombre: string; nota?: string }[];
+  /** Si es true, se muestra un campo de texto opcional en vez de un selector */
+  libre?: boolean;
+  /** Texto de ayuda del campo libre */
+  placeholder?: string;
+  /** Opciones del selector. `precio` reemplaza el precio base del producto. */
+  valores: { nombre: string; nota?: string; precio?: number }[];
 }
 
 export interface Producto {
@@ -16,6 +21,7 @@ export interface Producto {
   emoji: string;
   eslogan: string;
   descripcion: string;
+  /** Precio base. Si una opción define `precio`, esa opción lo reemplaza. */
   precio: number;
   /** Texto fijo que se agrega al pedido (ej. aroma único) */
   detalleFijo?: string;
@@ -102,5 +108,107 @@ export const productos: Producto[] = [
       'Práctico, pequeño y fácil de llevar',
     ],
     opciones: [],
+  },
+  {
+    id: 'gloss',
+    nombre: 'Gloss',
+    emoji: '💋',
+    eslogan: 'Lip gloss y butter balm con llavero',
+    descripcion:
+      'Brillo labial hidratante en varias referencias y tonos. Cada gloss trae su dije decorativo. Elige la referencia y cuéntanos el tono que prefieres; lo confirmamos por WhatsApp según disponibilidad.',
+    precio: 10000,
+    miniatura: '/img/productos/gloss-mini.webp',
+    fotos: [
+      { src: '/img/productos/gloss-1.webp', alt: 'Gloss que enamora: butter balm y lip gloss Butterfly' },
+      { src: '/img/productos/gloss-2.webp', alt: 'Lip gloss: tonos disponibles' },
+      { src: '/img/productos/gloss-3.webp', alt: 'Todos los tonos disponibles de gloss y butter balm' },
+      { src: '/img/productos/gloss-4.webp', alt: 'Gloss LOVE y Butter Balm con sus tonos' },
+      { src: '/img/productos/gloss-5.webp', alt: 'LOVE Lip Gloss, brillo con color' },
+      { src: '/img/productos/gloss-6.webp', alt: 'Lip gloss Queen Beauty de 16 ml con dijes' },
+      { src: '/img/productos/gloss-7.webp', alt: 'Gloss con llavero en exhibidor de La Pomponería' },
+    ],
+    puntos: [
+      'Brillo intenso, natural y luminoso',
+      'Hidrata y suaviza los labios',
+      'Cada gloss incluye su dije decorativo',
+      'Varias referencias y tonos para elegir',
+    ],
+    opciones: [
+      {
+        etiqueta: 'Referencia',
+        valores: [
+          { nombre: 'Butterfly Lip Gloss LOVE', nota: 'brillo con color multicolor' },
+          { nombre: 'Butter Balm', nota: 'hidratación cremosa' },
+          { nombre: 'Lip Gloss Strawberry', nota: 'aroma a fresa' },
+          { nombre: 'Queen Beauty 16 ml', nota: 'hidratante con dije' },
+        ],
+      },
+      { etiqueta: 'Tono preferido (opcional)', libre: true, placeholder: 'Ej. rosado, rojo, morado', valores: [] },
+    ],
+  },
+  {
+    id: 'llaveros',
+    nombre: 'Llaveros',
+    emoji: '🧸',
+    eslogan: 'Llaveros pompón y corazón',
+    descripcion:
+      'Llaveros suaves y esponjosos para llaves, mochilas o bolsos. Los pompones pequeños cuestan $8.000 y los grandes (corazones y pompones de colores) $10.000.',
+    precio: 8000,
+    miniatura: '/img/productos/llaveros-mini.webp',
+    fotos: [
+      { src: '/img/productos/llaveros-1.webp', alt: 'Llaveros pompón de colores, $8.000' },
+      { src: '/img/productos/llaveros-2.webp', alt: 'Llaveros de corazón, grandes' },
+      { src: '/img/productos/llaveros-3.webp', alt: 'Llaveros de corazón en tonos pastel' },
+    ],
+    puntos: [
+      'Suaves y esponjosos',
+      'Diseños modernos y encantadores',
+      'Ideales para llaves, mochilas o bolsos',
+    ],
+    opciones: [
+      {
+        etiqueta: 'Tamaño',
+        valores: [
+          { nombre: 'Pompón pequeño', nota: '$8.000', precio: 8000 },
+          { nombre: 'Grande (corazón o pompón)', nota: '$10.000', precio: 10000 },
+        ],
+      },
+      { etiqueta: 'Color preferido (opcional)', libre: true, placeholder: 'Ej. rosado, turquesa, morado', valores: [] },
+    ],
+  },
+  {
+    id: 'combo-gloss-llavero',
+    nombre: 'Combo Gloss + Llavero',
+    emoji: '🎀',
+    eslogan: 'Combo personalizado',
+    descripcion:
+      'Elige tu gloss o butter balm favorito y un llavero de tu estilo por un precio especial. Cuéntanos tus tonos y colores y los confirmamos por WhatsApp según disponibilidad.',
+    precio: 15000,
+    miniatura: '/img/productos/combo-mini.webp',
+    fotos: [
+      { src: '/img/productos/combo-1.webp', alt: 'Combo Gloss + Llavero por $15.000, últimas unidades' },
+      { src: '/img/productos/combo-2.webp', alt: 'Lip gloss, butter balm y llaveros pompón, combo por $15.000' },
+    ],
+    puntos: [
+      'Un gloss o butter balm a tu elección',
+      'Más un llavero de tu estilo',
+      'Precio especial de combo',
+    ],
+    opciones: [
+      {
+        etiqueta: 'Gloss',
+        valores: [
+          { nombre: 'Butterfly Lip Gloss LOVE' },
+          { nombre: 'Butter Balm' },
+          { nombre: 'Lip Gloss Strawberry' },
+          { nombre: 'Queen Beauty 16 ml' },
+        ],
+      },
+      {
+        etiqueta: 'Llavero',
+        valores: [{ nombre: 'Pompón pequeño' }, { nombre: 'Grande (corazón o pompón)' }],
+      },
+      { etiqueta: 'Tonos y colores preferidos (opcional)', libre: true, placeholder: 'Ej. gloss rosado, llavero turquesa', valores: [] },
+    ],
   },
 ];

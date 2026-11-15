@@ -16,17 +16,20 @@ const datosCarrito = (p: (typeof productos)[number]) =>
   <div class="contenedor">
     <div class="mx-auto max-w-2xl text-center">
       <span class="chip">✨ Más productos</span>
-      <h2 class="titulo-seccion mt-3">Para tu carro y tu baño</h2>
+      <h2 class="titulo-seccion mt-3">Novedades de La Pomponería</h2>
       <p class="mt-3 text-marca-morado/70">
-        Dos novedades de La Pomponería BGA. Agrégalas al mismo pedido de tus AromaPoms y finaliza por WhatsApp.
+        Para tu carro, tu baño y tus accesorios. Agrégalos al mismo pedido de tus AromaPoms y finaliza por WhatsApp.
       </p>
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
-      {productos.map((p) => (
+      {productos.map((p, i) => (
         <article
           data-producto={p.id}
-          class="flex flex-col overflow-hidden rounded-3xl bg-white shadow-tarjeta ring-1 ring-marca-rosa/30"
+          data-precio-base={p.precio}
+          class={`flex flex-col overflow-hidden rounded-3xl bg-white shadow-tarjeta ring-1 ring-marca-rosa/30 ${
+            i === productos.length - 1 && productos.length % 2 === 1 ? 'lg:col-span-2 lg:mx-auto lg:w-full lg:max-w-xl' : ''
+          }`}
         >
           <!-- Galería -->
           <div class="bg-marca-rosaClaro p-3">
@@ -71,23 +74,36 @@ const datosCarrito = (p: (typeof productos)[number]) =>
             {p.opciones.length > 0 && (
               <div class="mt-5 grid gap-3 sm:grid-cols-2">
                 {p.opciones.map((op) => (
-                  <label class="block text-xs font-bold text-marca-morado/70">
+                  <label class={`block text-xs font-bold text-marca-morado/70 ${op.libre ? 'sm:col-span-2' : ''}`}>
                     {op.etiqueta}
-                    <select
-                      data-opcion={op.etiqueta}
-                      class="mt-1 w-full rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm font-semibold text-marca-morado focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30"
-                    >
-                      {op.valores.map((v) => (
-                        <option value={v.nombre}>{v.nota ? `${v.nombre} (${v.nota})` : v.nombre}</option>
-                      ))}
-                    </select>
+                    {op.libre ? (
+                      <input
+                        type="text"
+                        data-opcion={op.etiqueta}
+                        data-libre="true"
+                        maxlength="80"
+                        placeholder={op.placeholder ?? ''}
+                        class="mt-1 w-full rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm font-semibold text-marca-morado placeholder:font-normal placeholder:text-marca-morado/40 focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30"
+                      />
+                    ) : (
+                      <select
+                        data-opcion={op.etiqueta}
+                        class="mt-1 w-full rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm font-semibold text-marca-morado focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30"
+                      >
+                        {op.valores.map((v) => (
+                          <option value={v.nombre} data-precio={v.precio}>
+                            {v.nota ? `${v.nombre} (${v.nota})` : v.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </label>
                 ))}
               </div>
             )}
 
             <div class="mt-6 flex flex-1 items-end justify-between gap-3">
-              <span class="font-display text-2xl font-extrabold text-marca-fucsia">
+              <span class="precio-producto font-display text-2xl font-extrabold text-marca-fucsia">
                 ${p.precio.toLocaleString('es-CO')}
               </span>
               <button type="button" class="btn-primario px-5 py-2.5 text-sm" data-agregar-producto={datosCarrito(p)}>
@@ -115,5 +131,18 @@ const datosCarrito = (p: (typeof productos)[number]) =>
         miniaturas.forEach((o) => o.setAttribute('aria-pressed', String(o === m)));
       });
     });
+
+    // Precio: si una opción define su propio precio, se muestra el de la opción elegida
+    const precioEl = tarjeta.querySelector<HTMLElement>('.precio-producto');
+    const actualizarPrecio = () => {
+      let precio = Number(tarjeta.dataset.precioBase);
+      tarjeta.querySelectorAll<HTMLSelectElement>('select[data-opcion]').forEach((sel) => {
+        const p = sel.selectedOptions[0]?.dataset.precio;
+        if (p) precio = Number(p);
+      });
+      if (precioEl) precioEl.textContent = '$' + precio.toLocaleString('es-CO');
+    };
+    tarjeta.querySelectorAll('select[data-opcion]').forEach((s) => s.addEventListener('change', actualizarPrecio));
+    actualizarPrecio();
   });
 </script>

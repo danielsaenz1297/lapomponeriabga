@@ -1,10 +1,10 @@
 /**
- * Bolsas de regalo personalizadas (9 ediciones especiales).
+ * Bolsas de regalo personalizadas (8 ediciones especiales).
  * El cliente elige UNA bolsa por cada AromaPom (paso 2 de la compra).
  * La bolsa va incluida SIN costo adicional.
  *
  * Cada edición tiene dos caras: `lado1` (frente) y `lado2` (reverso).
- * La "Edición tradicional" (kraft) tiene una sola cara, así que lado2 queda indefinido.
+ * `lado2` es opcional: si una edición tiene una sola cara, se omite.
  *
  * Para cambiar una imagen, reemplaza el archivo en /public/img/bolsas
  * conservando el mismo nombre.
@@ -78,12 +78,6 @@ export const bolsas: Bolsa[] = [
     frase: 'Que esta Navidad huela a hogar y nos recuerde que, unidos, siempre renace la esperanza.',
     lado1: '/img/bolsas/navidad-rojo-lado1.jpeg',
     lado2: '/img/bolsas/navidad-rojo-lado2.jpeg',
-  },
-  {
-    id: 'tradicional',
-    nombre: 'Edición tradicional',
-    frase: 'Clásica bolsa kraft con cordón, elegante para cualquier ocasión.',
-    lado1: '/img/bolsas/normal.jpeg',
   },
 ];
 
