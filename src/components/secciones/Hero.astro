@@ -2,10 +2,10 @@
 import { negocio, precios } from '../../data/config';
 ---
 
-<!-- 1) Imagen principal: lo primero que se ve al entrar -->
-<section id="inicio" class="relative overflow-hidden bg-degradado-marca pt-8 md:pt-10">
-  <div class="contenedor relative">
-    <div class="mx-auto max-w-xl overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
+<!-- 1) Imagen principal + presentación de la marca: lo primero que se ve al entrar -->
+<section id="inicio" class="relative overflow-hidden bg-degradado-marca py-10 md:py-14">
+  <div class="contenedor relative grid items-center gap-8 md:grid-cols-2 lg:gap-12">
+    <div class="mx-auto w-full max-w-xl overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
       <img
         src="/img/marca/hero-principal.jpeg"
         alt="La Pomponería BGA: AromaPoms $35.000, Yessence Car $25.000, Popoff $20.000 y Gloss $10.000"
@@ -14,6 +14,57 @@ import { negocio, precios } from '../../data/config';
         height="1254"
         fetchpriority="high"
       />
+    </div>
+
+    <div>
+      <span class="chip bg-white text-marca-fucsia">💜 Emprendimiento de amigas</span>
+      <h1 class="mt-3 font-display text-3xl font-extrabold leading-tight text-marca-morado sm:text-4xl">
+        ¡Bienvenidos a <span class="text-marca-fucsia">La Pomponería BGA</span>!
+      </h1>
+      <p class="mt-3 text-marca-morado/80">
+        Somos un emprendimiento de amigas apasionadas por los detalles, la creatividad y los productos que hacen
+        especiales los momentos.
+      </p>
+      <p class="mt-2 text-marca-morado/80">
+        Creamos y comercializamos productos que combinan aromas, color, estilo y funcionalidad, ideales para
+        consentirte, regalar y darle un toque especial a tu día.
+      </p>
+
+      <h2 class="mt-5 font-display text-lg font-extrabold text-marca-morado">✨ Conoce nuestros productos</h2>
+      <ul class="mt-3 space-y-2.5 text-sm text-marca-morado/80">
+        <li class="flex gap-2.5">
+          <span aria-hidden="true" class="text-lg leading-snug">🌸</span>
+          <span><strong class="text-marca-morado">AromaPoms:</strong> difusores aromáticos para el hogar y tus espacios favoritos, con pompones llenos de color, 15 fragancias disponibles y mensajes inspiradores.</span>
+        </li>
+        <li class="flex gap-2.5">
+          <span aria-hidden="true" class="text-lg leading-snug">🚗</span>
+          <span><strong class="text-marca-morado">Yessence Car:</strong> difusores aromáticos para vehículos, perfectos para disfrutar de tus aromas favoritos mientras conduces.</span>
+        </li>
+        <li class="flex gap-2.5">
+          <span aria-hidden="true" class="text-lg leading-snug">🍊</span>
+          <span><strong class="text-marca-morado">Popoff:</strong> inhibidor de malos olores para el baño, práctico y fácil de llevar a cualquier lugar.</span>
+        </li>
+        <li class="flex gap-2.5">
+          <span aria-hidden="true" class="text-lg leading-snug">💄</span>
+          <span><strong class="text-marca-morado">Lip Gloss con Llavero:</strong> brillos labiales hidratantes con una presentación encantadora y un práctico accesorio para llevar contigo y lucir siempre fabulosa.</span>
+        </li>
+        <li class="flex gap-2.5">
+          <span aria-hidden="true" class="text-lg leading-snug">🎁</span>
+          <span><strong class="text-marca-morado">Bolsas de regalo personalizadas:</strong> 8 ediciones para elegir o la posibilidad de personalizarlas con el logo de tu empresa.</span>
+        </li>
+      </ul>
+
+      <p class="mt-4 text-sm text-marca-morado/80">
+        💗 Nos encanta ofrecer productos originales, llenos de personalidad y pensados para sorprender. Queremos que
+        cada compra sea una experiencia especial.
+      </p>
+      <p class="mt-2 text-sm font-semibold text-marca-morado">📍 Estamos en Bucaramanga y su área metropolitana.</p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="#aromas" class="btn-primario">Ver AromaPoms 🌈</a>
+        <a href="#productos" class="btn-contorno">Ver más productos ✨</a>
+        <a href={`https://wa.me/${negocio.whatsapp.numero}`} target="_blank" rel="noopener" class="btn-contorno">Escríbenos 📲</a>
+      </div>
     </div>
   </div>
 </section>
