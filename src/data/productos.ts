@@ -62,6 +62,7 @@ export const productos: Producto[] = [
           { nombre: 'Creamy Coconut', nota: 'tropical, suave y cremoso' },
           { nombre: 'Golden Pasión', nota: 'intenso y envolvente' },
           { nombre: 'Pineapple Cream', nota: 'dulce, frutal y refrescante' },
+          { nombre: 'Mora Velvet' },
         ],
       },
       {
