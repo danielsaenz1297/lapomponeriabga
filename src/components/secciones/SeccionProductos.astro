@@ -1,0 +1,119 @@
+---
+import { productos } from '../../data/productos';
+
+const datosCarrito = (p: (typeof productos)[number]) =>
+  JSON.stringify({
+    id: p.id,
+    nombre: p.nombre,
+    emoji: p.emoji,
+    imagen: p.miniatura,
+    precio: p.precio,
+    detalleFijo: p.detalleFijo ?? '',
+  });
+---
+
+<section id="productos" class="scroll-mt-20 bg-white/60 py-16">
+  <div class="contenedor">
+    <div class="mx-auto max-w-2xl text-center">
+      <span class="chip">✨ Más productos</span>
+      <h2 class="titulo-seccion mt-3">Para tu carro y tu baño</h2>
+      <p class="mt-3 text-marca-morado/70">
+        Dos novedades de La Pomponería BGA. Agrégalas al mismo pedido de tus AromaPoms y finaliza por WhatsApp.
+      </p>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+      {productos.map((p) => (
+        <article
+          data-producto={p.id}
+          class="flex flex-col overflow-hidden rounded-3xl bg-white shadow-tarjeta ring-1 ring-marca-rosa/30"
+        >
+          <!-- Galería -->
+          <div class="bg-marca-rosaClaro p-3">
+            <div class="flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-white">
+              <img
+                src={p.fotos[0].src}
+                alt={p.fotos[0].alt}
+                class="galeria-principal h-full w-full object-contain"
+                loading="lazy"
+              />
+            </div>
+            <div class="mt-3 flex gap-2 overflow-x-auto pb-1">
+              {p.fotos.map((f, i) => (
+                <button
+                  type="button"
+                  class="galeria-miniatura h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white ring-2 ring-transparent transition aria-pressed:ring-marca-fucsia"
+                  aria-pressed={i === 0 ? 'true' : 'false'}
+                  aria-label={`Ver foto ${i + 1}: ${f.alt}`}
+                  data-src={f.src}
+                  data-alt={f.alt}
+                >
+                  <img src={f.src} alt="" class="h-full w-full object-cover" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Información -->
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="font-display text-2xl font-extrabold text-marca-morado">
+              {p.emoji} {p.nombre}
+            </h3>
+            <p class="text-sm font-bold text-marca-lila">{p.eslogan}</p>
+            <p class="mt-3 text-sm text-marca-morado/70">{p.descripcion}</p>
+
+            <ul class="mt-4 space-y-1.5 text-sm text-marca-morado/80">
+              {p.puntos.map((pt) => (
+                <li class="flex gap-2"><span aria-hidden="true">💜</span>{pt}</li>
+              ))}
+            </ul>
+
+            {p.opciones.length > 0 && (
+              <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                {p.opciones.map((op) => (
+                  <label class="block text-xs font-bold text-marca-morado/70">
+                    {op.etiqueta}
+                    <select
+                      data-opcion={op.etiqueta}
+                      class="mt-1 w-full rounded-xl border border-marca-rosa/60 bg-white px-3 py-2 text-sm font-semibold text-marca-morado focus:border-marca-fucsia focus:outline-none focus:ring-2 focus:ring-marca-fucsia/30"
+                    >
+                      {op.valores.map((v) => (
+                        <option value={v.nombre}>{v.nota ? `${v.nombre} (${v.nota})` : v.nombre}</option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            <div class="mt-6 flex flex-1 items-end justify-between gap-3">
+              <span class="font-display text-2xl font-extrabold text-marca-fucsia">
+                ${p.precio.toLocaleString('es-CO')}
+              </span>
+              <button type="button" class="btn-primario px-5 py-2.5 text-sm" data-agregar-producto={datosCarrito(p)}>
+                Agregar al pedido 🛒
+              </button>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Galería: al hacer clic en una miniatura se cambia la foto principal
+  document.querySelectorAll<HTMLElement>('[data-producto]').forEach((tarjeta) => {
+    const principal = tarjeta.querySelector<HTMLImageElement>('.galeria-principal');
+    const miniaturas = tarjeta.querySelectorAll<HTMLButtonElement>('.galeria-miniatura');
+    miniaturas.forEach((m) => {
+      m.addEventListener('click', () => {
+        if (principal) {
+          principal.src = m.dataset.src ?? principal.src;
+          principal.alt = m.dataset.alt ?? '';
+        }
+        miniaturas.forEach((o) => o.setAttribute('aria-pressed', String(o === m)));
+      });
+    });
+  });
+</script>

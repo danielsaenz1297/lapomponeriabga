@@ -56,7 +56,6 @@ export const bolsas: Bolsa[] = [
     frase: 'Abre tus alas y vuela hacia nuevos horizontes, persigue tus sueños.',
     lado1: '/img/bolsas/nuevos-horizontes-lado1.jpeg',
     lado2: '/img/bolsas/nuevos-horizontes-lado2.jpeg',
-    agotada: true,
   },
   {
     id: 'suenos-mama',
