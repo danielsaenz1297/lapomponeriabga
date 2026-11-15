@@ -1,0 +1,92 @@
+---
+import { negocio } from '../../data/config';
+
+const mensaje =
+  '¡Hola La Pomponería BGA! 💜\nQuiero cotizar AromaPoms personalizados para mi empresa o evento.';
+const urlCotizar = `https://wa.me/${negocio.whatsapp.numero}?text=${encodeURIComponent(mensaje)}`;
+
+const personalizable = [
+  { icono: '🏷️', titulo: 'Etiqueta con el logo de tu empresa', detalle: 'Sticker o etiqueta con tu logo o la frase que desees.' },
+  { icono: '💌', titulo: 'Tarjeta o mensaje personalizado', detalle: 'Un mensaje propio para tus clientes, equipo o invitados.' },
+  { icono: '🛍️', titulo: 'Empaque con tu imagen o temática', detalle: 'Bolsa de regalo con tu imagen o la temática de tu evento.' },
+  { icono: '🎁', titulo: 'Diseño a tu estilo', detalle: 'Colores, frase y ocasión a tu gusto.' },
+  { icono: '🫙', titulo: 'Frasco de vidrio (opcional)', detalle: 'Con etiqueta personalizada, para complementar el detalle.' },
+];
+
+const condiciones = [
+  { titulo: 'Precios', detalle: 'Válidos para la cantidad y condiciones indicadas en la cotización.' },
+  { titulo: 'Tiempo de entrega', detalle: 'Por confirmar según disponibilidad de aromas.' },
+  { titulo: 'Forma de pago', detalle: '50% de anticipo para confirmar el pedido y 50% contra entrega.' },
+  { titulo: 'Personalización', detalle: 'La tarjeta, sticker o etiqueta con tu logo o frase va sin costo adicional.' },
+  { titulo: 'Diseños y aromas', detalle: 'Los diseños, aromas y elementos de la edición se confirman antes de iniciar la producción.' },
+  { titulo: 'Vigencia', detalle: 'La cotización tiene una vigencia de 15 días calendario.' },
+];
+
+const imagenes = [
+  { src: '/img/personalizacion/personalizacion-1.webp', alt: 'AromaPom personalizado: etiqueta con el logo de tu empresa, tarjeta o mensaje, empaque con tu imagen y diseño a tu estilo', w: 1000, h: 1094 },
+  { src: '/img/personalizacion/personalizacion-2.webp', alt: 'Ejemplo de AromaPom personalizado para empresa con pompón, etiqueta, frasco de vidrio y bolsa de regalo', w: 1000, h: 1333 },
+  { src: '/img/personalizacion/personalizacion-3.webp', alt: 'Difusores personalizados para empresas: condiciones comerciales, forma de pago y tiempos de entrega', w: 1000, h: 1094 },
+];
+---
+
+<section id="personalizacion" class="scroll-mt-20 bg-white/60 py-16">
+  <div class="contenedor">
+    <div class="mx-auto max-w-2xl text-center">
+      <span class="chip">🏢 Para empresas y eventos</span>
+      <h2 class="titulo-seccion mt-3">Personalización: detalles con tu propia identidad</h2>
+      <p class="mt-3 text-marca-morado/70">
+        AromaPoms artesanales, con aroma a elección y presentación personalizada con el logo, el mensaje y la imagen de tu
+        empresa. Ideales para regalos corporativos, clientes, equipos y eventos.
+      </p>
+    </div>
+
+    <!-- Fotos del servicio -->
+    <div class="mt-10 grid items-start gap-6 md:grid-cols-3">
+      {imagenes.map((img) => (
+        <figure class="overflow-hidden rounded-3xl shadow-suave ring-4 ring-white">
+          <img src={img.src} alt={img.alt} class="h-auto w-full" width={img.w} height={img.h} loading="lazy" />
+        </figure>
+      ))}
+    </div>
+
+    <div class="mt-12 grid gap-8 lg:grid-cols-2">
+      <!-- Qué se puede personalizar -->
+      <div>
+        <h3 class="font-display text-xl font-extrabold text-marca-morado">✨ ¿Qué puede incluir tu pedido?</h3>
+        <ul class="mt-4 space-y-3">
+          {personalizable.map((p) => (
+            <li class="flex items-start gap-3 rounded-2xl bg-marca-rosaClaro p-4">
+              <span class="text-2xl" aria-hidden="true">{p.icono}</span>
+              <div>
+                <p class="font-bold text-marca-morado">{p.titulo}</p>
+                <p class="text-sm text-marca-morado/70">{p.detalle}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Condiciones comerciales -->
+      <div>
+        <h3 class="font-display text-xl font-extrabold text-marca-morado">📋 Condiciones comerciales</h3>
+        <ul class="mt-4 space-y-3 rounded-3xl bg-white p-5 shadow-tarjeta ring-1 ring-marca-rosa/30">
+          {condiciones.map((c) => (
+            <li class="flex gap-3 border-b border-marca-rosa/30 pb-3 last:border-0 last:pb-0">
+              <span aria-hidden="true" class="text-marca-fucsia">💜</span>
+              <p class="text-sm text-marca-morado/80">
+                <strong class="text-marca-morado">{c.titulo}:</strong> {c.detalle}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 text-center">
+      <a href={urlCotizar} target="_blank" rel="noopener" class="btn-whatsapp">
+        Solicitar cotización por WhatsApp 📲
+      </a>
+      <p class="mt-2 text-xs text-marca-morado/60">Cuéntanos la cantidad, el aroma y tu logo, y te enviamos la cotización.</p>
+    </div>
+  </div>
+</section>

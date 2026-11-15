@@ -6,6 +6,7 @@ const navItems = [
   { label: 'Aromas', href: '/#aromas' },
   { label: 'Bolsas', href: '/#bolsas' },
   { label: 'Productos', href: '/#productos' },
+  { label: 'Empresas', href: '/#personalizacion' },
   { label: 'Características', href: '/#caracteristicas' },
   { label: 'Cómo funciona', href: '/#como-funciona' },
   { label: 'Nosotras', href: '/#nosotras' },
@@ -20,11 +21,11 @@ const navItems = [
     <Logo />
 
     <!-- Navegación de escritorio -->
-    <nav class="hidden items-center gap-4 xl:gap-5 lg:flex" aria-label="Navegación principal">
+    <nav class="hidden items-center gap-4 xl:flex" aria-label="Navegación principal">
       {navItems.map((item) => (
         <a
           href={item.href}
-          class="text-sm font-bold text-marca-morado/80 transition-colors hover:text-marca-fucsia"
+          class="whitespace-nowrap text-sm font-bold text-marca-morado/80 transition-colors hover:text-marca-fucsia"
         >
           {item.label}
         </a>
@@ -52,7 +53,7 @@ const navItems = [
       <button
         type="button"
         id="btn-menu-movil"
-        class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-marca-morado shadow-sm lg:hidden"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-marca-morado shadow-sm xl:hidden"
         aria-label="Abrir menú"
         aria-expanded="false"
       >
@@ -64,7 +65,7 @@ const navItems = [
   </div>
 
   <!-- Menú móvil desplegable -->
-  <nav id="menu-movil" class="hidden border-t border-marca-rosa/40 bg-marca-crema lg:hidden" aria-label="Navegación móvil">
+  <nav id="menu-movil" class="hidden border-t border-marca-rosa/40 bg-marca-crema xl:hidden" aria-label="Navegación móvil">
     <div class="contenedor flex flex-col py-3">
       {navItems.map((item) => (
         <a
